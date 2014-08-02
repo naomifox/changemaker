@@ -1,7 +1,7 @@
 '''
 Change Maker.
 
-Makin' change 
+Makin' change
 
 Author: Naomi Fox <naomi.fox@gmail.com>
 Date: August 1, 2014
@@ -11,9 +11,10 @@ Date: August 1, 2014
 import unittest
 import collections
 
+
 class ChangeMaker:
     '''
-    Class to compute all the ways to make change 
+    Class to compute all the ways to make change
     from some set of coin denominations.
 
     The time and space requirements for each method
@@ -21,7 +22,7 @@ class ChangeMaker:
 
     Constants:
     N: amount for which to "make change"
-    C: number of coin denominations     
+    C: number of coin denominations
     '''
     def __init__(self, coin_denoms):
         '''
@@ -42,7 +43,7 @@ class ChangeMaker:
         Contains a nested for loop
         that checks C coin denominations for every
         intermediate amount in [1, N]
-        
+
         Space: O(C * N)
         This method fills in a 1 x N table, but every
         cell can contain a list of O(C) coin denominations.
@@ -72,30 +73,30 @@ class ChangeMaker:
 
         Each combination will be in order, from largest to smallest
         coin denomination
-        
+
         Running time: O(C * N^2)
-        This implements a DFS-like graph traversal.  There are at most 
+        This implements a DFS-like graph traversal.  There are at most
         N 'nodes' / table cells, but nodes may be visited multiple times.
-        Each node stores at most O(C) values, so therefore, 
+        Each node stores at most O(C) values, so therefore,
         at most C children must be visited from each node.
         Since we are doing list concatenation at each step,
         that requires time linear in the size of the list, where
         the list size is O(N).
-    
+
         Space: O(N^2)
-        Stores all possible change combinations as a separate list of 
+        Stores all possible change combinations as a separate list of
         values, with no compression.
-        The number of combinations is O(N), and each might contain as 
+        The number of combinations is O(N), and each might contain as
         many as N separate values.
 
         Notes:
         To save time:
         - could memoize intermediate combinations
-        - could  bstring concatenation
+        - use chaining, or some other data structure, rather than list concatenation
         To save space:
-        - could store frequency counts, as opposed to each 
+        - could store frequency counts, as opposed to each
         value separately, possibly using collections.Counter class.
-        - could change method to a generator, as opposed to just 
+        - could change method to a generator, as opposed to just
         returning a list of lists
         '''
         combos = None
@@ -115,7 +116,7 @@ class ChangeMaker:
         used.
 
         Calls the fill_table() and get_combination() methods
-        
+
         Running time: O(C * N^2)
         Space: O(N^2)
         '''
@@ -131,7 +132,7 @@ class ChangeMaker:
         of coins for making change
 
         Calls the change() method
-        
+
         Running time: O(C * N^2)
         Space: O(N^2)
 
@@ -266,8 +267,9 @@ class TestChangeMaker(unittest.TestCase):
         endTime = time.time()
         print startTime
         print endTime
-        self.assertTrue(endTime - startTime < 20 * 20 * 20 )
+        self.assertTrue(endTime - startTime < 20 * 20 * 20)
         print len(combinations)
+
 
 def parse_input():
     '''
@@ -298,6 +300,7 @@ def parse_input():
     amount = int(raw_input())
     return (coin_denoms, amount)
 
+
 def combination_to_str(combination):
     '''
     Convert a combination, as a list of integers, to
@@ -312,6 +315,7 @@ def combination_to_str(combination):
         outstr += "%d x %d, " % (counter[k], k)
     return outstr[:-2]  # cut off the trailing comma
 
+
 def print_output(combinations):
     '''
     Print all combinations with combination_to_str()
@@ -320,9 +324,9 @@ def print_output(combinations):
     if combinations is None:
         print "No solution"
         return
-    for (i, combination) in enumerate(combinations):            
+    for (i, combination) in enumerate(combinations):
         print str(i + 1) + ": " + combination_to_str(combination)
-    
+
 if __name__ == '__main__':
     '''
     Main method
