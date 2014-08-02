@@ -11,20 +11,18 @@ Date: August 1, 2014
 import unittest
 import collections
 
-
 class ChangeMaker:
     '''
-    Class to compute all the ways to make change
+    Class to compute all the ways to make change 
+    from some set of coin denominations.
 
     The time and space requirements for each method
     are included in the documentation.
 
     Constants:
     N: amount for which to "make change"
-    C: number of coin denominations
-        
+    C: number of coin denominations     
     '''
-
     def __init__(self, coin_denoms):
         '''
         Initialize coin_denoms
@@ -33,18 +31,17 @@ class ChangeMaker:
 
     def fill_table(self, amount):
         '''
-        table has one row, and amount columns
-        table[i]: contains the set of coin denominations that could be added
-                  to previously computed values in order to
+        Memoization table for dynamic programming solution.
+        table has 1 row, and N columns
+        table[i]: contains a list of coin denominations that could be added
+                  to previously computed values in table in order to
                   make up the amount, or None if its not possible
-                  with the set of denominations
-
-        Time and space requirements:
+                  with the provided denominations.
 
         Running time: O(C * N)
         Contains a nested for loop
         that checks C coin denominations for every
-        intermediate amount in [1,N]
+        intermediate amount in [1, N]
         
         Space: O(C * N)
         This method fills in a 1 x N table, but every
@@ -76,8 +73,6 @@ class ChangeMaker:
         Each combination will be in order, from largest to smallest
         coin denomination
         
-        Time and space requirements:
-
         Running time: O(C * N^2)
         This implements a DFS-like graph traversal.  There are at most 
         N 'nodes' / table cells, but nodes may be visited multiple times.
@@ -94,9 +89,14 @@ class ChangeMaker:
         many as N separate values.
 
         Notes:
-        To speed up, could memoize combinations.
-        To save space, coult store frequency counts, as opposed to each 
+        To save time:
+        - could memoize intermediate combinations
+        - could  bstring concatenation
+        To save space:
+        - could store frequency counts, as opposed to each 
         value separately, possibly using collections.Counter class.
+        - could change method to a generator, as opposed to just 
+        returning a list of lists
         '''
         combos = None
         if amount > 0:
@@ -114,13 +114,13 @@ class ChangeMaker:
         Get all possible sets of change that could be
         used.
 
-        Time and space requirements:
-
+        Calls the fill_table() and get_combination() methods
+        
         Running time: O(C * N^2)
         Space: O(N^2)
         '''
         table = self.fill_table(amount)
-        if table[-1] is None:
+        if table[-1] is None:  # no solution
             return None
         combinations = self.get_combinations(table, amount)
         return combinations
@@ -129,6 +129,14 @@ class ChangeMaker:
         '''
         Get the number of all combinations
         of coins for making change
+
+        Calls the change() method
+        
+        Running time: O(C * N^2)
+        Space: O(N^2)
+
+        Note: could save space by not
+        actually storing all the combinations
         '''
         combinations = self.change(amount)
         if not combinations:
@@ -140,11 +148,10 @@ class ChangeMaker:
 class TestChangeMaker(unittest.TestCase):
     '''
     Class to test ChangeMaker class
-
     '''
     def test_fill_table_1(self):
         '''
-        Simple test for fill_table
+        Simple test for fill_table()
         Checks case where only a penny change is needed
         '''
         cm = ChangeMaker([25, 10, 5, 1])
@@ -154,7 +161,7 @@ class TestChangeMaker(unittest.TestCase):
 
     def test_fill_table_2(self):
         '''
-        Another simple test for fill_table
+        Another simple test for fill_table()
         Checks case where 10 cents change is needed
         '''
         cm = ChangeMaker([25, 10, 5, 1])
@@ -164,6 +171,9 @@ class TestChangeMaker(unittest.TestCase):
         self.assertEqual(len(table[9]), 3)
 
     def test_get_combinations(self):
+        '''
+        Test get_combinations()
+        '''
         cm = ChangeMaker([])
         table = [[1], [1], [1], [1], [5, 1], [5, 1], [5, 1], [5, 1], [5, 1], [10, 5, 1]]
         combinations = cm.get_combinations(table, 10)
@@ -171,6 +181,7 @@ class TestChangeMaker(unittest.TestCase):
 
     def test_change_1(self):
         '''
+        Test change(), using US coins
         >>> cm = ChangeMaker([25, 10, 5, 1])
         >>> cm.change(8)
         [[5, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1]]
@@ -183,6 +194,8 @@ class TestChangeMaker(unittest.TestCase):
 
     def test_change_2(self):
         '''
+        Test change() for simplest case where only one denomination
+        is available.
         >>> cm = ChangeMaker([5])
         >>> cm.change(5)
         [[5]]
@@ -197,7 +210,8 @@ class TestChangeMaker(unittest.TestCase):
 
     def test_change_3(self):
         '''
-        Example where greedy algorithm does not suffice
+        Test change() on non-trivial example
+        where greedy algorithm does not suffice
         >>> cm = ChangeMaker([3, 4, 5, 7])
         >>> cm.change(10)
         [[4, 3, 3], [7, 3], [5, 5]]
@@ -225,6 +239,9 @@ class TestChangeMaker(unittest.TestCase):
             self.assertTrue(combo in combinations)
 
     def test_count_change(self):
+        '''
+        Test count_change()
+        '''
         cm = ChangeMaker([2, 1])
         num_coins = cm.count_change(3)
         self.assertEquals(num_coins, 2)
@@ -237,7 +254,7 @@ class TestChangeMaker(unittest.TestCase):
 
     def test_change_scale(self):
         '''
-        Test how the change method scales
+        Test how change() scales.
         Run on worst possible case where there
         is a denomination for every integer value.
         '''
@@ -282,6 +299,13 @@ def parse_input():
     return (coin_denoms, amount)
 
 def combination_to_str(combination):
+    '''
+    Convert a combination, as a list of integers, to
+    a string representation.
+
+    For example: [3, 1, 1, 1, 1, 1]
+    becomes: "3 x 1, 1 x 5"
+    '''
     counter = collections.Counter(combination)
     outstr = ""
     for k in counter:
@@ -289,6 +313,9 @@ def combination_to_str(combination):
     return outstr[:-2]  # cut off the trailing comma
 
 def print_output(combinations):
+    '''
+    Print all combinations with combination_to_str()
+    '''
     print "Change count:"
     if combinations is None:
         print "No solution"
@@ -297,6 +324,10 @@ def print_output(combinations):
         print str(i + 1) + ": " + combination_to_str(combination)
     
 if __name__ == '__main__':
+    '''
+    Main method
+    See README file for instructions
+    '''
     (coin_denoms, amount) = parse_input()
     cm = ChangeMaker(coin_denoms)
     combinations = cm.change(amount)

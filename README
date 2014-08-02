@@ -1,36 +1,18 @@
 Author: Naomi Fox <naomi.fox@gmail.com>
 Date: Aug 1, 2014
+File: changemaker/README
 
 This directory contains the code for the ChangeMaker class with specs in the instructions.txt file.
+
+Contents:
+
 
 # To run unittests:
 ```
 $ python -m unittest changemaker
 ```
 
-# To run program:
-
-Input Format:
-Line 1: space-delimited coin denominations
-Line 2: amount to be changed into coins
-
-Output Format:
-All combinations
-
-Sample Input 1:
-25 10 5
-8
-
-
-Sample Output 1:
-No solution
-
-Sample Input 2:
-25 10 5 1
-8
-
-Sample Output 2:
-3 * 5 + 5 * 1
+# To run on command line:
 
 Example:
 ```
@@ -47,3 +29,28 @@ Change count:
 No solution
 ```
 
+Input Format:
+Line 1: space-delimited coin denominations
+Line 2: amount to be changed into coins
+
+Output Format:
+Combination 1
+Combination 2
+...
+
+Sample Input 1:
+25 10 5
+8
+
+Sample Output 1:
+No solution
+
+Sample Input 2:
+25 10 5 1
+8
+
+Sample Output 2:
+3 * 5 + 5 * 1
+
+# Run time and space requirements:
+See code documentation
