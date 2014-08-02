@@ -4,9 +4,6 @@ File: changemaker/README
 
 This directory contains the code for the ChangeMaker class with specs in the instructions.txt file.
 
-Contents:
-
-
 # To run unittests:
 ```
 $ python -m unittest changemaker
