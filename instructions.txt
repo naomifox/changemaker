@@ -1,11 +1,3 @@
-Hi Naomi. Below is what we think is a pretty straight-forward problem, which nonetheless offers an opportunity to show off your coding skill. Let's pretend that this is going to be production code that's going to be deployed in a mission-critical system. 
-
-Let me know what you think, and have fun at Whitney. I'd be envious, but I'm flying out to Cape Cod tomorrow :)
-
-I'm going to only be on-line sporadically next week, so I'm adding Nithin to this thread. He really likes this problem. 
-
-alex
-
 Change Maker
 
 Implement a class named ChangeMaker that takes a list of coin denominations in the constructor:
@@ -42,11 +34,3 @@ The solution should be generalized to work with any denominations of coins (i.e.
 >>> cm.count_change(4)
 3
 Assume that the ChangeMaker class will always be given lists of positive integers without any repeated elements, and also assume that the amount to be changed will always be an integer >= 0. Attempt to provide as efficient a solution as possible, and discuss the time and space complexity.
-
-Please put up the code on your GitHub account and provide a README on how to run your program along with the time and space complexity discussion mentioned above.
-
-Also, please write this in Python 2.7, if possible -- we are part of the 98% that use it. ;)
-
-Thanks! We really look forward to seeing what you come up with.
-
-Also, please feel free to ask me any questions.
