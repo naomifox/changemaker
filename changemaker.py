@@ -1,14 +1,28 @@
 '''
-Change Maker
+Change Maker.
+
+Makin' change 
+
+Author: Naomi Fox <naomi.fox@gmail.com>
+Date: August 1, 2014
 
 '''
 
 import unittest
+import collections
 
 
 class ChangeMaker:
     '''
     Class to compute all the ways to make change
+
+    The time and space requirements for each method
+    are included in the documentation.
+
+    Constants:
+    N: amount for which to "make change"
+    C: number of coin denominations
+        
     '''
 
     def __init__(self, coin_denoms):
@@ -24,6 +38,17 @@ class ChangeMaker:
                   to previously computed values in order to
                   make up the amount, or None if its not possible
                   with the set of denominations
+
+        Time and space requirements:
+
+        Running time: O(C * N)
+        Contains a nested for loop to
+        that checks C coin denominations for every
+        intermediate amount in [1,N]
+        
+        Space: O(C * N)
+        This method fills in a 1 x N table, but every
+        cell can contain a list of O(C) coin denominations.
         '''
         # initialize table with None for all values
         table = [None for i in range(1, amount + 1)]
@@ -51,10 +76,27 @@ class ChangeMaker:
         Each combination will be in order, from largest to smallest
         coin denomination
         
-        Run time: O(|V|)
-        
-        To speed up, could memoize combinations
-        
+        Time and space requirements:
+
+        Running time: O(C * N^2)
+        This implements a DFS-like graph traversal.  There are at most 
+        N 'nodes' / table cells, but nodes may be visited multiple times.
+        Each node stores at most O(C) values, so therefore, 
+        at most C children must be visited from each node.
+        Since we are doing list concatenation at each step,
+        that requires time linear in the size of the list, where
+        the list size is O(N).
+    
+        Space: O(N^2)
+        Stores all possible change combinations as a separate list of 
+        values, with no compression.
+        The number of combinations is O(N), and each might contain as 
+        many as N separate values.
+
+        Notes:
+        To speed up, could memoize combinations.
+        To save space, coult store frequency counts, as opposed to each 
+        value separately, possibly using collections.Counter class.
         '''
         combos = None
         if amount > 0:
@@ -70,7 +112,12 @@ class ChangeMaker:
     def change(self, amount):
         '''
         Get all possible sets of change that could be
-        used
+        used.
+
+        Time and space requirements:
+
+        Running time: O(C * N^2)
+        Space: O(N^2)
         '''
         table = self.fill_table(amount)
         if table[-1] is None:
@@ -188,7 +235,14 @@ class TestChangeMaker(unittest.TestCase):
         num_coins = cm.count_change(1)
         self.assertEquals(num_coins, 0)
 
-
+    def test_change_scale(self):
+        '''
+        Test how the change method scales
+        '''
+        coin_denoms = xrange(1,20)
+        cm = ChangeMaker(coin_denoms)
+        combinations = cm.change(20)
+        print len(combinations)
 
 def parse_input():
     '''
@@ -220,7 +274,6 @@ def parse_input():
     return (coin_denoms, amount)
 
 def combination_to_str(combination):
-    import collections
     counter = collections.Counter(combination)
     outstr = ""
     for k in counter:
