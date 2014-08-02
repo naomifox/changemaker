@@ -42,7 +42,7 @@ class ChangeMaker:
         Time and space requirements:
 
         Running time: O(C * N)
-        Contains a nested for loop to
+        Contains a nested for loop
         that checks C coin denominations for every
         intermediate amount in [1,N]
         
@@ -238,10 +238,18 @@ class TestChangeMaker(unittest.TestCase):
     def test_change_scale(self):
         '''
         Test how the change method scales
+        Run on worst possible case where there
+        is a denomination for every integer value.
         '''
-        coin_denoms = xrange(1,20)
-        cm = ChangeMaker(coin_denoms)
+        import time
+        startTime = time.time()
+        denoms = xrange(1, 20)
+        cm = ChangeMaker(denoms)
         combinations = cm.change(20)
+        endTime = time.time()
+        print startTime
+        print endTime
+        self.assertTrue(endTime - startTime < 20 * 20 * 20 )
         print len(combinations)
 
 def parse_input():
