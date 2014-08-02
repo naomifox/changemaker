@@ -3,15 +3,12 @@ Date: Aug 1, 2014
 
 This directory contains the code for the ChangeMaker class with specs in the instructions.txt file.
 
-How to run this program:
-
-How to 
-
-
-To run unittests:
+# To run unittests:
+```
 $ python -m unittest changemaker
+```
 
-To run program:
+# To run program:
 
 Input Format:
 Line 1: space-delimited coin denominations
@@ -20,10 +17,10 @@ Line 2: amount to be changed into coins
 Output Format:
 All combinations
 
-
 Sample Input 1:
 25 10 5
 8
+
 
 Sample Output 1:
 No solution
@@ -35,4 +32,18 @@ Sample Input 2:
 Sample Output 2:
 3 * 5 + 5 * 1
 
+Example:
+```
+$ python changemaker.py
+25 10 5 1
+8
+Change count:
+1: 3 x 1, 1 x 5
+2: 8 x 1
+$ python changemaker.py
+24 10 5
+8
+Change count:
+No solution
+```
 
