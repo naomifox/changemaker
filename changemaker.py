@@ -27,18 +27,21 @@ class ChangeMaker:
     def __init__(self, coin_denoms):
         '''
         Initialize coin_denoms
+
+        Running time: O(C)
+        Space: O(C)
         '''
         self.coin_denoms = coin_denoms
 
     def fill_table(self, amount):
         '''
-        Memoization table for dynamic programming solution.
+        Returns memoization table for dynamic programming solution.
         table has 1 row, and N columns
         table[i]: contains a list of coin denominations that could be added
                   to previously computed values in table in order to
                   make up the amount, or None if its not possible
                   with the provided denominations.
-
+                  
         Running time: O(C * N)
         Contains a nested for loop
         that checks C coin denominations for every
@@ -52,15 +55,19 @@ class ChangeMaker:
         table = [None for i in range(1, amount + 1)]
         for i in range(1, amount + 1):
             for coin_val in self.coin_denoms:
-                if coin_val > i:
-                    continue
-                if coin_val == i or table[i - coin_val - 1] is not None:
-                    # add the coin
+                add_coin = False
+                if coin_val > i:  # coin_val is greater than amount for cell
+                    add_coin = False
+                elif coin_val == i:
+                    add_coin = True
+                elif table[i - coin_val - 1] is not None:
+                    add_coin = True
+                if add_coin:
                     if table[i - 1] is None:
                         table[i - 1] = []
                     table[i - 1].append(coin_val)
         return table
-
+  
     def get_combinations(self, table, amount):
         '''
         Recursive method to retrieve all coin combinations
@@ -72,7 +79,9 @@ class ChangeMaker:
         and it has a solution
 
         Each combination will be in order, from largest to smallest
-        coin denomination
+        coin denomination.
+
+        If no solution is found, returns None.
 
         Running time: O(C * N^2)
         This implements a DFS-like graph traversal.  There are at most
@@ -110,6 +119,48 @@ class ChangeMaker:
                     combos += [c + [coin_val] for c in combos2 if c[-1] >= coin_val]
         return combos
 
+    def get_num_combinations(self, table, amount, last_coin_val = None):
+        '''
+        Recursive method to count the number of combinations for making change
+        for some amount
+
+        table was produced from output of fill_table method
+        last_coin_val is used so we don't get duplicate combinations 
+        that are just permutations
+
+        Returns None if no solution is found, otherwise returns number
+        of possible combinations
+
+        This method is called by count_change()
+
+        Running time: O(C * N)
+        This implements a DFS-like graph traversal.  There are at most
+        N 'nodes' / table cells.
+        Nodes may be visited multiple times.  Each node stores at most 
+        O(C) values, so therefore, at most C children must be visited 
+        from each node.
+
+        Space: O(1)
+        Does not store anything beyond the count of combinations for
+        each amount, recursively.
+        Since the method is recursive, the call stack might grow O(N) long in
+        the worst case.
+        '''
+        num_combos = 0
+        if last_coin_val is None:
+            last_coin_val = amount
+        if amount == 0:
+            return 0
+        if table[amount - 1] == None:
+            return None  # No solution
+        next_coin_vals = table[amount - 1]
+        for coin_val in [c for c in next_coin_vals if c <= last_coin_val]:
+            if coin_val == amount:
+                num_combos += 1
+            else:
+                num_combos += self.get_num_combinations(table, amount - coin_val, coin_val)
+        return num_combos
+
     def change(self, amount):
         '''
         Get all possible sets of change that could be
@@ -131,20 +182,16 @@ class ChangeMaker:
         Get the number of all combinations
         of coins for making change
 
-        Calls the change() method
-
         Running time: O(C * N^2)
         Space: O(N^2)
 
         Note: could save space by not
         actually storing all the combinations
         '''
-        combinations = self.change(amount)
-        if not combinations:
-            return 0
-        else:
-            return len(combinations)
-
+        table = self.fill_table(amount)
+        if table[-1] is None:  # no solution
+            return None
+        return self.get_num_combinations(table, amount)
 
 class TestChangeMaker(unittest.TestCase):
     '''
@@ -190,6 +237,7 @@ class TestChangeMaker(unittest.TestCase):
         cm = ChangeMaker([25, 10, 5, 1])
         combinations = cm.change(8)
         self.assertEqual(len(combinations), 2)
+        print combinations
         self.assertEqual(len(combinations[0]), 4)
         self.assertEqual(len(combinations[1]), 8)
 
@@ -220,7 +268,9 @@ class TestChangeMaker(unittest.TestCase):
         None
         '''
         cm = ChangeMaker([3, 4, 5, 7])
+        print cm.fill_table(10)
         combinations = cm.change(10)
+        print combinations
         self.assertEqual(len(combinations), 3)
         answer = [[4, 3, 3], [7, 3], [5, 5]]
         for combo in answer:
@@ -245,13 +295,22 @@ class TestChangeMaker(unittest.TestCase):
         '''
         cm = ChangeMaker([2, 1])
         num_coins = cm.count_change(3)
+        print cm.change(3)
         self.assertEquals(num_coins, 2)
 
         cm = ChangeMaker([2])
         num_coins = cm.count_change(2)
         self.assertEquals(num_coins, 1)
-        num_coins = cm.count_change(1)
-        self.assertEquals(num_coins, 0)
+        num_coins = cm.count_change(1)  # should return None
+        self.assertFalse(num_coins)
+
+        cm = ChangeMaker([25, 10, 5, 1])
+        combinations = cm.change(7)
+        numcombinations = cm.count_change(7)
+        self.assertEquals(len(combinations), numcombinations)
+        combinations = cm.change(52)
+        numcombinations = cm.count_change(52)
+        self.assertEquals(len(combinations), numcombinations)        
 
     def test_change_scale(self):
         '''
