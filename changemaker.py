@@ -41,7 +41,7 @@ class ChangeMaker:
                   to previously computed values in table in order to
                   make up the amount, or None if its not possible
                   with the provided denominations.
-                  
+
         Running time: O(C * N)
         Contains a nested for loop
         that checks C coin denominations for every
@@ -67,7 +67,7 @@ class ChangeMaker:
                         table[i - 1] = []
                     table[i - 1].append(coin_val)
         return table
-  
+
     def get_combinations(self, table, amount):
         '''
         Recursive method to retrieve all coin combinations
@@ -119,13 +119,13 @@ class ChangeMaker:
                     combos += [c + [coin_val] for c in combos2 if c[-1] >= coin_val]
         return combos
 
-    def get_num_combinations(self, table, amount, last_coin_val = None):
+    def get_num_combinations(self, table, amount, last_coin_val=None):
         '''
         Recursive method to count the number of combinations for making change
         for some amount
 
         table was produced from output of fill_table method
-        last_coin_val is used so we don't get duplicate combinations 
+        last_coin_val is used so we don't get duplicate combinations
         that are just permutations
 
         Returns None if no solution is found, otherwise returns number
@@ -136,8 +136,8 @@ class ChangeMaker:
         Running time: O(C * N)
         This implements a DFS-like graph traversal.  There are at most
         N 'nodes' / table cells.
-        Nodes may be visited multiple times.  Each node stores at most 
-        O(C) values, so therefore, at most C children must be visited 
+        Nodes may be visited multiple times.  Each node stores at most
+        O(C) values, so therefore, at most C children must be visited
         from each node.
 
         Space: O(1)
@@ -151,7 +151,7 @@ class ChangeMaker:
             last_coin_val = amount
         if amount == 0:
             return 0
-        if table[amount - 1] == None:
+        if table[amount - 1] is None:
             return None  # No solution
         next_coin_vals = table[amount - 1]
         for coin_val in [c for c in next_coin_vals if c <= last_coin_val]:
@@ -192,6 +192,7 @@ class ChangeMaker:
         if table[-1] is None:  # no solution
             return None
         return self.get_num_combinations(table, amount)
+
 
 class TestChangeMaker(unittest.TestCase):
     '''
@@ -310,7 +311,7 @@ class TestChangeMaker(unittest.TestCase):
         self.assertEquals(len(combinations), numcombinations)
         combinations = cm.change(52)
         numcombinations = cm.count_change(52)
-        self.assertEquals(len(combinations), numcombinations)        
+        self.assertEquals(len(combinations), numcombinations)
 
     def test_change_scale(self):
         '''
