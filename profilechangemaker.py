@@ -1,6 +1,6 @@
 '''
 
-Profile Change Maker
+Benchmark ChangeMaker performance
 
 Author: Naomi Fox <naomi.fox@gmail.com>
 Date: August 12, 2014

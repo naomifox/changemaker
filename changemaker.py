@@ -56,8 +56,9 @@ class ChangeMaker:
         (combination with replacement).
         The length of each list is O(N) (worst case is all pennies).
 
-        Notes: Could save time and space by saving combinations in a
-        more compact representation.
+        Notes: 
+		- Could save time and space by saving combinations in a
+        sequence implementation with faster concatenation than Python list.
         '''
         # initialize table with empty list for all values in [1, amount]
         table = [[] for i in range(1, amount + 1)]
