@@ -51,3 +51,13 @@ Sample Output 2:
 
 # Run time and space requirements:
 See code documentation
+
+# Benchmarking 
+
+To create a scatter plot showing number of combinations and actual run times for 
+a number of samples.
+
+$ python profilechangemaker.py
+
+The scatter plot for current version of code is stored as: 
+benchmarking_scatterplot.png

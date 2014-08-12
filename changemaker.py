@@ -277,7 +277,7 @@ def print_output(combinations):
 
 if __name__ == '__main__':
     '''
-    Main method
+    Main
     See README file for instructions
     '''
     (coin_denoms, amount) = parse_input()
