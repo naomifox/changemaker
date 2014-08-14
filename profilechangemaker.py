@@ -10,6 +10,7 @@ Date: August 12, 2014
 import random
 import time
 from changemaker import ChangeMaker
+import matplotlib.pyplot as plt
 
 def benchmark_count_change(denoms, max_N, num_samples):
     '''
@@ -35,7 +36,14 @@ def benchmark_count_change(denoms, max_N, num_samples):
     return (amounts, counts, times)
 
 def plot(amounts, counts, times):
-    import matplotlib.pyplot as plt
+    '''
+    Creates a scatter plot showing:
+    - amount vs. # combinations
+    - amount vs. running time
+
+    params amounts, counts, and times
+    should all be of the same length
+    '''  
     fig, ax1 = plt.subplots()
     ax1.plot(amounts, counts, 'b.')
     ax1.set_xlabel('amount')
@@ -59,7 +67,7 @@ if __name__ == '__main__':
     uniformly sampled from [1, 200]
     '''
     us_denoms = [25, 10, 5, 1]
-    (amounts, counts, times) = benchmark_count_change(us_denoms, 200, 100)
+    (amounts, counts, times) = benchmark_count_change(us_denoms, 500, 100)
     plot(amounts, counts, times)     
         
         
